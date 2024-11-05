@@ -18,5 +18,13 @@
         </ul>
     </li>
 </ul>
+
+<h1>Créez votre portfolio</h1>
+
+<form th:action="@{/modifPortfolio}" method="post">
+    <div><label> Title : <input type="text" name="title"/> </label></div>
+    <div><label> Description: <input type="text" name="description"/> </label></div>
+    <div><input type="submit" value="Register"/></div>
+</form>
 </body>
 </html>

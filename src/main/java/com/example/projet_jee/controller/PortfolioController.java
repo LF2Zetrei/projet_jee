@@ -2,18 +2,16 @@ package com.example.projet_jee.controller;
 
 import com.example.projet_jee.model.Portfolio;
 import com.example.projet_jee.repository.PortfolioRepository;
+import com.example.projet_jee.service.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/portfolios")
+@RequestMapping("/portfolios")
 public class PortfolioController {
 
     private final PortfolioRepository portfolios;
@@ -29,8 +27,13 @@ public class PortfolioController {
         return "portfolios";
     }
 
+
+
     @GetMapping("/{id}")
     public Portfolio findById(@PathVariable("id") Portfolio portfolio){
         return portfolio;
     }
+
+
+
 }
