@@ -16,6 +16,9 @@ public class PortfolioController {
 
     private final PortfolioRepository portfolios;
 
+    @Autowired
+    PortfolioService portfolioService;
+
     public PortfolioController(PortfolioRepository portfolioRepository) {
         this.portfolios = portfolioRepository;
     }
@@ -25,6 +28,17 @@ public class PortfolioController {
         List<Portfolio> portfolios = this.portfolios.findAll();
         model.addAttribute("portfolios", portfolios);
         return "portfolios";
+    }
+
+    @GetMapping("/modifPortfolio")
+    public String modifPortfolio(){
+        return "modifPortfolio";
+    }
+
+    @PostMapping("/modifPortfolio")
+    public String createPortfolio(@RequestParam String title, @RequestParam String description){
+        portfolioService.createPortfolio(title, description);
+        return "redirect:/portfolios/modifPortfolio";
     }
 
 
