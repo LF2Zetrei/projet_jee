@@ -4,6 +4,7 @@ import com.example.projet_jee.model.Portfolio;
 import com.example.projet_jee.repository.PortfolioRepository;
 import com.example.projet_jee.service.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,6 @@ public class PortfolioController {
         portfolioService.createPortfolio(title, description);
         return "redirect:/portfolios/modifPortfolio";
     }
-
 
 
     @GetMapping("/{id}")

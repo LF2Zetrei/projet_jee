@@ -13,8 +13,7 @@ import java.util.Objects;
 public class Portfolio {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "portfolio_seq")
-    @SequenceGenerator(name = "portfolio_seq", sequenceName = "PORTFOLIO_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
     private String description;
