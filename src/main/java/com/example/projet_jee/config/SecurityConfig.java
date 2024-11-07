@@ -30,8 +30,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**", "/login", "/home", "/", "/register").permitAll()
-                        .requestMatchers("/admin", "/portfolios", "/portfolios/modifPortfolio").hasRole("ADMIN")
-                        .requestMatchers("/user", "/portfolios" , "/portfolios/modifPortfolio").hasRole("USER")
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/user").hasRole("USER")
+                        .requestMatchers("/portfolios/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated())
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .formLogin(form -> form

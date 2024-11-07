@@ -10,6 +10,7 @@ public class User {
     @SequenceGenerator(name = "user_seq", sequenceName = "USER_SEQ", allocationSize = 1)
     private Long id;
 
+
     private String username;
     private String password;
     private String roles;
