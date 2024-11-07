@@ -7,8 +7,7 @@ import java.util.Objects;
 @Entity
 public class Project {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_seq")
-    @SequenceGenerator(name = "project_seq", sequenceName = "PROJECT_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
 
