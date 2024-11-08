@@ -37,9 +37,10 @@ public class PortfolioController {
     }
 
     @PostMapping("/modifPortfolio")
-    public String createPortfolio(@RequestParam String title, @RequestParam String description){
-        portfolioService.createPortfolio(title, description);
-        return "redirect:/portfolios/modifPortfolio";
+    public String createPortfolio(@RequestParam String title, @RequestParam String description, Model model) {
+        Portfolio newPortfolio = portfolioService.createPortfolio(title, description);
+        model.addAttribute("portfolio", newPortfolio);
+        return "modifPortfolio"; // Charge la page modifPortfolio avec le portfolio nouvellement créé
     }
 
 

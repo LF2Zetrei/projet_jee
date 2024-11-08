@@ -13,5 +13,11 @@
         <div><label> Description: <input type="text" name="description"/> </label></div>
         <div><input type="submit" value="Register"/></div>
     </form>
+
+    <h3>Nouveau Portfolio Créé</h3>
+    <div th:if="${portfolio != null}">
+        <p><strong>Title:</strong> <span th:text="${portfolio.title}"></span></p>
+        <p><strong>Description:</strong> <span th:text="${portfolio.description}"></span></p>
+    </div>
 </body>
 </html>

@@ -10,8 +10,9 @@ public class PortfolioService {
     @Autowired
     private PortfolioRepository portfolioRepository;
 
-    public void createPortfolio(String title, String description){
+    public Portfolio createPortfolio(String title, String description){
         Portfolio portfolio = new Portfolio(title, description);
         portfolioRepository.save(portfolio);
+        return portfolio;
     }
 }
