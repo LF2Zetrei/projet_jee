@@ -5,7 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>Create a project</h1>
+    <h2><a th:href="@{/portfolios}">mes portfolio</a> </h2>
+    <h2> <a th:href="@{/user}"> ma page user</a> </h2>
+    <h1>Create a project</h1>,
     <form th:action="@{/projects/create}" method="post">
         <div><label> Title : <input type="text" name="title"/> </label></div>
         <div><label> Description: <input type="text" name="description"/> </label></div>

@@ -13,7 +13,7 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public void createPortfolio(String title, String description){
+    public void createProject(String title, String description){
         Project project = new Project(title, description);
         projectRepository.save(project);
     }

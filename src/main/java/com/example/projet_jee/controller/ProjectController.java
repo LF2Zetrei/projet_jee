@@ -18,8 +18,9 @@ public class ProjectController {
     private ProjectService projectService;
 
     @PostMapping("/create")
-    public void create(@RequestParam String title, @RequestParam String description) {
-        projectService.createPortfolio(title, description);
+    public String create(@RequestParam String title, @RequestParam String description) {
+        projectService.createProject(title, description);
+        return "redirect:/portfolios/modifPortfolio";
     }
 
 

@@ -6,6 +6,8 @@
 </head>
 <body>
 <h1>Portfolios:</h1>
+<h2> <a th:href="@{/portfolios/modifPortfolio}">modifier portfolio</a> </h2>
+<h2> <a th:href="@{/user}"> ma page user</a> </h2>
 <ul>
     <li th:each="portfolio : ${portfolios}">
         <h2 th:text="${portfolio.title}">Title</h2>
