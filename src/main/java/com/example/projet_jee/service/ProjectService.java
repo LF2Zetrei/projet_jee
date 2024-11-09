@@ -20,4 +20,15 @@ public class ProjectService {
         project.setPortfolio(portfolioRepository.findById(id).orElseThrow());
         projectRepository.save(project);
     }
+
+    public void modifyProject(String title, String description, Long id){
+        Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projet introuvable"));
+        if (title != null && !title.isEmpty()) {
+            project.setTitle(title);
+        }
+        if (description != null && !description.isEmpty()) {
+            project.setDescription(description);
+        }
+        projectRepository.save(project);
+    }
 }

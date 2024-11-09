@@ -2,7 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Modification Portfolio</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Ajout de jQuery -->
 </head>
 <body>
 <h2><a th:href="@{/portfolios}">Mes portfolios</a></h2>
@@ -18,11 +21,47 @@
 </form>
 
 <h3>Projets du Portfolio</h3>
-<ul>
-    <li th:each="project : ${portfolio.projects}">
+<ul id="project-list">
+    <li th:each="project : ${portfolio.projects}" th:attr="data-project-id=${project.id}">
         <h3 th:text="${project.title}">Titre du projet</h3>
         <p th:text="${project.description}">Description du projet</p>
+        <form onsubmit="event.preventDefault(); modifyProject(this);">
+            <div><label>Title: <input type="text" name="title" th:value="${project.title}"/></label></div>
+            <div><label>Description: <input type="text" name="description" th:value="${project.description}"/></label></div>
+            <input type="hidden" name="id" th:value="${project.id}"/>
+            <div><input type="submit" value="modifier"/></div>
+        </form>
     </li>
 </ul>
+
+<script>
+    function modifyProject(form) {
+        const formData = $(form).serialize(); // Sérialise les données du formulaire
+        const projectId = $(form).find("input[name='id']").val(); // Récupère l'ID du projet
+
+        // Récupère le token CSRF depuis les balises meta
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajax({
+            url: '/projects/modif',
+            type: 'PUT',
+            data: formData,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken); // Ajoute le token CSRF dans l'en-tête
+            },
+            success: function(response) {
+                // Met à jour le titre et la description du projet dans la liste
+                const projectItem = $(`[data-project-id='${projectId}']`);
+                projectItem.find('h3').text($(form).find("input[name='title']").val());
+                projectItem.find('p').text($(form).find("input[name='description']").val());
+            },
+            error: function(error) {
+                console.error("Erreur lors de la mise à jour du projet", error);
+            }
+        });
+    }
+</script>
+
 </body>
 </html>

@@ -6,12 +6,10 @@ import com.example.projet_jee.repository.PortfolioRepository;
 import com.example.projet_jee.service.PortfolioService;
 import com.example.projet_jee.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/projects")
@@ -27,6 +25,12 @@ public class ProjectController {
     public String create(@RequestParam String title, @RequestParam String description, @RequestParam Long id, Model model) {
         projectService.createProject(title, description, id);
         return "redirect:/portfolios/modifPortfolio?id=" + id;
+    }
+
+    @PutMapping("/modif")
+    public ResponseEntity<Void> update(@RequestParam String title, @RequestParam String description, @RequestParam Long id) {
+        projectService.modifyProject(title, description, id);
+        return ResponseEntity.ok().build(); // Retourne une réponse 200 OK
     }
 
 }
