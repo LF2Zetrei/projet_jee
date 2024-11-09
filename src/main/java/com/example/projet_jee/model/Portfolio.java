@@ -1,5 +1,6 @@
 package com.example.projet_jee.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ public class Portfolio {
     private LocalDateTime updatedOn;
 
     @OneToMany(mappedBy = "portfolio", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Project> projects = new ArrayList<>();
 
     public Portfolio() {

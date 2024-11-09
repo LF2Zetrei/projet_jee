@@ -4,6 +4,7 @@ import com.example.projet_jee.model.Portfolio;
 import com.example.projet_jee.repository.PortfolioRepository;
 import com.example.projet_jee.service.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,10 +42,11 @@ public class PortfolioController {
         return "modifPortfolio";
     }
 
-    @PostMapping("/modifPortfolio")
-    public String createPortfolio(@RequestParam String title, @RequestParam String description, Model model) {
+    @PostMapping(value ="/modifPortfolio", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Portfolio> createPortfolio(@RequestParam String title, @RequestParam String description, Model model) {
         Portfolio newPortfolio = portfolioService.createPortfolio(title, description);
-        return "redirect:/portfolios/modifPortfolio?id=" + newPortfolio.getId();
+        return ResponseEntity.ok(newPortfolio);
     }
 
 

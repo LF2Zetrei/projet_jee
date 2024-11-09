@@ -15,10 +15,11 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public void createProject(String title, String description, Long id){
+    public Project createProject(String title, String description, Long id){
         Project project = new Project(title, description);
         project.setPortfolio(portfolioRepository.findById(id).orElseThrow());
         projectRepository.save(project);
+        return project;
     }
 
     public void modifyProject(String title, String description, Long id){

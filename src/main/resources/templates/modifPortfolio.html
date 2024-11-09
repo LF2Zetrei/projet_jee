@@ -13,9 +13,9 @@
 
 <h1>Créer un projet pour le portfolio : <span th:text="${portfolio.title}"></span></h1>
 
-<form th:action="@{/projects/create}" method="post">
-    <div><label>Title: <input type="text" name="title"/></label></div>
-    <div><label>Description: <input type="text" name="description"/></label></div>
+<form onsubmit="event.preventDefault(); createProject(this)">
+    <div><label>Title: <input type="text" name="title" required/></label></div>
+    <div><label>Description: <input type="text" name="description" required/></label></div>
     <input type="hidden" name="id" th:value="${portfolio.id}"/>
     <div><input type="submit" value="Register"/></div>
 </form>
@@ -35,6 +35,48 @@
 </ul>
 
 <script>
+    function createProject(form) {
+        const formData = $(form).serialize();
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajax({
+            url: '/projects/create',
+            type: 'POST',
+            data: formData,
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+                xhr.setRequestHeader("Accept", "application/json");
+            },
+            success: function(response) {
+                console.log("Projet créé avec succès:", response);
+                if (response && response.id && response.title && response.description) {
+                    $('#project-list').append(`
+                <li data-project-id="${response.id}">
+                    <h3>${response.title}</h3>
+                    <p>${response.description}</p>
+                    <form onsubmit="event.preventDefault(); modifyProject(this);">
+                        <div><label>Title: <input type="text" name="title" value="${response.title}"/></label></div>
+                        <div><label>Description: <input type="text" name="description" value="${response.description}"/></label></div>
+                        <input type="hidden" name="id" value="${response.id}"/>
+                        <div><input type="submit" value="modifier"/></div>
+                    </form>
+                </li>
+            `);
+                } else {
+                    console.error("La réponse JSON n'est pas au format attendu:", response);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur lors de la création du projet. Détails de l'erreur:");
+                console.error("Statut:", status);
+                console.error("Erreur:", error);
+                console.error("Réponse complète:", xhr.responseText);
+            }
+        });
+    }
     function modifyProject(form) {
         const formData = $(form).serialize(); // Sérialise les données du formulaire
         const projectId = $(form).find("input[name='id']").val(); // Récupère l'ID du projet

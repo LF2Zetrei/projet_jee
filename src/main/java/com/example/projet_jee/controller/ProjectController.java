@@ -21,10 +21,11 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @PostMapping("/create")
-    public String create(@RequestParam String title, @RequestParam String description, @RequestParam Long id, Model model) {
-        projectService.createProject(title, description, id);
-        return "redirect:/portfolios/modifPortfolio?id=" + id;
+    @PostMapping(value = "/create", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<Project> create(@RequestParam String title, @RequestParam String description, @RequestParam Long id) {
+        Project project = projectService.createProject(title, description, id);
+        return ResponseEntity.ok(project); // Retourne l'objet Project sous forme JSON
     }
 
     @PutMapping("/modif")

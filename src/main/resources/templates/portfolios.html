@@ -2,30 +2,72 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Portfolios</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <h1>Portfolios:</h1>
-<h2> <a th:href="@{/user}"> ma page user</a> </h2>
-<ul>
+<h2><a th:href="@{/user}">Ma page utilisateur</a></h2>
+<ul id="portfolio-list">
     <li th:each="portfolio : ${portfolios}">
-        <h2 th:text="${portfolio.title}">Title</h2>
-        <h2 th:text="${portfolio.description}">Title</h2>
+        <h2 th:text="${portfolio.title}">Titre du Portfolio</h2>
+        <h2 th:text="${portfolio.description}">Description du Portfolio</h2>
         <ul>
             <li th:each="project : ${portfolio.projects}">
-                <h2 th:text="${project.title}">Title</h2>
-                <h2 th:text="${project.description}">Title</h2>
+                <h3 th:text="${project.title}">Titre du projet</h3>
+                <p th:text="${project.description}">Description du projet</p>
             </li>
         </ul>
-        <h2><a th:href="@{/portfolios/modifPortfolio(id=${portfolio.id})}">Modifier ce portfolio</a></h2>
+        <h3><a th:href="@{/portfolios/modifPortfolio(id=${portfolio.id})}">Modifier ce portfolio</a></h3>
     </li>
 </ul>
-<h1>Créez votre portfolio</h1>
 
-<form th:action="@{/portfolios/modifPortfolio}" method="post">
-    <div><label> Title : <input type="text" name="title"/> </label></div>
-    <div><label> Description: <input type="text" name="description"/> </label></div>
-    <div><input type="submit" value="Register"/></div>
+<h1>Créer un nouveau portfolio</h1>
+<form id="create-portfolio-form" onsubmit="event.preventDefault(); createPortfolio(this)">
+    <div><label>Titre : <input type="text" name="title" required/></label></div>
+    <div><label>Description : <input type="text" name="description" required/></label></div>
+    <div><input type="submit" value="Enregistrer"/></div>
 </form>
+
+<script>
+    function createPortfolio(form) {
+        const formData = $(form).serialize();
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajax({
+            url: '/portfolios/modifPortfolio',
+            type: 'POST',
+            data: formData,
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+                xhr.setRequestHeader("Accept", "application/json");
+            },
+            success: function(response) {
+                console.log("Portfolio créé avec succès:", response);
+                // Ajout du nouveau portfolio à la liste des portfolios
+                $('#portfolio-list').append(`
+                    <li data-portfolio-id="${response.id}">
+                        <h2>${response.title}</h2>
+                        <h2>${response.description}</h2>
+                        <ul id="project-list-${response.id}"></ul>
+                        <h3><a href="/portfolios/modifPortfolio?id=${response.id}">Modifier ce portfolio</a></h3>
+                    </li>
+                `);
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur lors de la création du projet. Détails de l'erreur:");
+                console.error("Statut:", status);
+                console.error("Erreur:", error);
+                console.error("Réponse complète:", xhr.responseText);
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
