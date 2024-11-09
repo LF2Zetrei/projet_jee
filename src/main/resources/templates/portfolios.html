@@ -17,9 +17,9 @@
                 <h2 th:text="${project.description}">Title</h2>
             </li>
         </ul>
+        <h2><a th:href="@{/portfolios/modifPortfolio(id=${portfolio.id})}">Modifier ce portfolio</a></h2>
     </li>
 </ul>
-
 <h1>Créez votre portfolio</h1>
 
 <form th:action="@{/portfolios/modifPortfolio}" method="post">

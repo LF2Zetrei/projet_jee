@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/portfolios")
@@ -19,6 +20,8 @@ public class PortfolioController {
 
     @Autowired
     PortfolioService portfolioService;
+    @Autowired
+    private PortfolioRepository portfolioRepository;
 
     public PortfolioController(PortfolioRepository portfolioRepository) {
         this.portfolios = portfolioRepository;
@@ -32,15 +35,16 @@ public class PortfolioController {
     }
 
     @GetMapping("/modifPortfolio")
-    public String modifPortfolio(){
+    public String modifPortfolio(@RequestParam String id, Model model){
+        Portfolio portfolio = portfolioRepository.findById(Long.valueOf(id)).get();
+        model.addAttribute("portfolio", portfolio);
         return "modifPortfolio";
     }
 
     @PostMapping("/modifPortfolio")
     public String createPortfolio(@RequestParam String title, @RequestParam String description, Model model) {
         Portfolio newPortfolio = portfolioService.createPortfolio(title, description);
-        model.addAttribute("portfolio", newPortfolio);
-        return "modifPortfolio"; // Charge la page modifPortfolio avec le portfolio nouvellement créé
+        return "redirect:/portfolios/modifPortfolio?id=" + newPortfolio.getId();
     }
 
 

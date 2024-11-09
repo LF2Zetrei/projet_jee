@@ -1,23 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Modification Portfolio</title>
 </head>
 <body>
-    <h2><a th:href="@{/portfolios}">mes portfolio</a> </h2>
-    <h2> <a th:href="@{/user}"> ma page user</a> </h2>
-    <h1>Create a project</h1>,
-    <form th:action="@{/projects/create}" method="post">
-        <div><label> Title : <input type="text" name="title"/> </label></div>
-        <div><label> Description: <input type="text" name="description"/> </label></div>
-        <div><input type="submit" value="Register"/></div>
-    </form>
+<h2><a th:href="@{/portfolios}">Mes portfolios</a></h2>
+<h2><a th:href="@{/user}">Ma page utilisateur</a></h2>
 
-    <h3>Nouveau Portfolio Créé</h3>
-    <div th:if="${portfolio != null}">
-        <p><strong>Title:</strong> <span th:text="${portfolio.title}"></span></p>
-        <p><strong>Description:</strong> <span th:text="${portfolio.description}"></span></p>
-    </div>
+<h1>Créer un projet pour le portfolio : <span th:text="${portfolio.title}"></span></h1>
+
+<form th:action="@{/projects/create}" method="post">
+    <div><label>Title: <input type="text" name="title"/></label></div>
+    <div><label>Description: <input type="text" name="description"/></label></div>
+    <input type="hidden" name="id" th:value="${portfolio.id}"/>
+    <div><input type="submit" value="Register"/></div>
+</form>
+
+<h3>Projets du Portfolio</h3>
+<ul>
+    <li th:each="project : ${portfolio.projects}">
+        <h3 th:text="${project.title}">Titre du projet</h3>
+        <p th:text="${project.description}">Description du projet</p>
+    </li>
+</ul>
 </body>
 </html>

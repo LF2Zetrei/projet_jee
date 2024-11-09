@@ -11,10 +11,13 @@ import org.springframework.stereotype.Service;
 public class ProjectService {
 
     @Autowired
+    PortfolioRepository portfolioRepository;
+    @Autowired
     private ProjectRepository projectRepository;
 
-    public void createProject(String title, String description){
+    public void createProject(String title, String description, Long id){
         Project project = new Project(title, description);
+        project.setPortfolio(portfolioRepository.findById(id).orElseThrow());
         projectRepository.save(project);
     }
 }
