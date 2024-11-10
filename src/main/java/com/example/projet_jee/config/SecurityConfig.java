@@ -31,8 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**", "/login", "/home", "/", "/register").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/user").hasRole("USER")
-                        .requestMatchers("/portfolios/**", "/projects/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/portfolios/**","/user", "/projects/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated())
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .formLogin(form -> form

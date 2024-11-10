@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Affichage administrateur</title>
     <style>
@@ -29,21 +28,25 @@
             border-radius: 5px;
         }
     </style>
-    <script>
-        function updateTime() {
-            const now = new Date();
-            document.getElementById("currentTime").textContent = now.toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-        }
-        setInterval(updateTime, 1000);
-        window.onload = updateTime;
-    </script>
 </head>
 <body>
+
+<!-- Conteneur pour le bandeau d'administration -->
+<div id="adminHeaderContainer"></div>
+
+<script>
+    // Charger dynamiquement le bandeau d'administration
+    fetch('/headerAdmin.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById("adminHeaderContainer").innerHTML = html;
+        })
+        .catch(error => console.error('Erreur lors du chargement du bandeau:', error));
+</script>
+
 <div class="content">
-
-    <a th:href="@{/portfolios}" class="nav-link">Voir les portfolios</a>
-
-    <form th:action="@{/logout}" method="post">
+    <a href="/portfolios" class="nav-link">Voir les portfolios</a>
+    <form action="/logout" method="post">
         <input type="submit" value="Sign Out" class="logout-btn"/>
     </form>
 </div>

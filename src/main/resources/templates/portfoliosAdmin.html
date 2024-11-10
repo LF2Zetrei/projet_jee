@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Administration des Portfolios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .content {
+      margin: 20px;
+    }
+    .search-bar, .portfolio-form {
+      margin: 20px 0;
+    }
+    .portfolio-actions, .project-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .action-btn {
+      background-color: #2c2a2a;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+
+<div id="adminHeaderContainer"></div>
+
+<script>
+
+  fetch('/headerAdmin.html')
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById("adminHeaderContainer").innerHTML = html;
+          })
+          .catch(error => console.error('Erreur lors du chargement du bandeau:', error));
+</script>
+
+<div class="content">
+
+
+  <div class="search-bar">
+    <label for="searchUser">Rechercher un utilisateur :</label>
+    <input type="text" id="searchUser" placeholder="Nom de l'utilisateur" oninput="filterPortfolios()" />
+  </div>
+
+  <!-- Liste des portfolios -->
+  <h1>Portfolios des utilisateurs :</h1>
+  <ul id="portfolioList">
+    <li th:each="portfolio : ${portfolios}" th:attr="data-user=${portfolio.user.name}">
+      <h2 th:text="${portfolio.title}">Titre du Portfolio</h2>
+      <h3 th:text="'Utilisateur: ' + ${portfolio.user.name}">Nom de l'utilisateur</h3>
+      <p th:text="${portfolio.description}">Description du Portfolio</p>
+
+      <!-- Liste des projets dans le portfolio -->
+      <ul>
+        <li th:each="project : ${portfolio.projects}">
+          <h4 th:text="${project.title}">Titre du Projet</h4>
+          <p th:text="${project.description}">Description du Projet</p>
+          <button class="action-btn" th:attr="data-project-id=${project.id}"
+                  onclick="deleteProject(this)">Supprimer le projet</button>
+        </li>
+      </ul>
+
+      <!-- Formulaire pour ajouter un nouveau projet -->
+      <div class="project-actions">
+        <form th:action="@{/portfolios/addProject}" method="post">
+          <input type="hidden" th:name="portfolioId" th:value="${portfolio.id}" />
+          <label> Titre du projet : <input type="text" name="projectTitle" required /> </label>
+          <label> Description du projet : <input type="text" name="projectDescription" required /> </label>
+          <input type="submit" class="action-btn" value="Ajouter Projet" />
+        </form>
+      </div>
+
+      <!-- Bouton pour supprimer le portfolio -->
+      <button class="action-btn" th:attr="data-portfolio-id=${portfolio.id}"
+              onclick="deletePortfolio(this)">Supprimer le Portfolio</button>
+    </li>
+  </ul>
+
+  <!-- Formulaire pour créer un nouveau portfolio -->
+  <div class="portfolio-form">
+    <h1>Créer un nouveau portfolio</h1>
+    <form th:action="@{/portfolios/createPortfolio}" method="post">
+      <label> Titre : <input type="text" name="title" required /> </label>
+      <label> Description : <input type="text" name="description" required /> </label>
+      <input type="submit" class="action-btn" value="Créer Portfolio" />
+    </form>
+  </div>
+
+</div>
+
+<script>
+  // Filtre de portfolios par utilisateur
+  function filterPortfolios() {
+    const searchTerm = document.getElementById("searchUser").value.toLowerCase();
+    document.querySelectorAll("#portfolioList > li").forEach(portfolio => {
+      const userName = portfolio.getAttribute("data-user").toLowerCase();
+      portfolio.style.display = userName.includes(searchTerm) ? "" : "none";
+    });
+  }
+
+  // Fonction pour supprimer un projet
+  function deleteProject(button) {
+    const projectId = button.getAttribute("data-project-id");
+    if (confirm("Voulez-vous vraiment supprimer ce projet ?")) {
+      fetch(`/portfolios/deleteProject/${projectId}`, { method: "DELETE" })
+              .then(response => {
+                if (response.ok) {
+                  button.closest("li").remove();
+                } else {
+                  alert("Erreur lors de la suppression du projet.");
+                }
+              })
+              .catch(error => console.error("Erreur:", error));
+    }
+  }
+
+  // Fonction pour supprimer un portfolio
+  function deletePortfolio(button) {
+    const portfolioId = button.getAttribute("data-portfolio-id");
+    if (confirm("Voulez-vous vraiment supprimer ce portfolio ?")) {
+      fetch(`/portfolios/deletePortfolio/${portfolioId}`, { method: "DELETE" })
+              .then(response => {
+                if (response.ok) {
+                  button.closest("li").remove();
+                } else {
+                  alert("Erreur lors de la suppression du portfolio.");
+                }
+              })
+              .catch(error => console.error("Erreur:", error));
+    }
+  }
+</script>
+
+</body>
+</html>
