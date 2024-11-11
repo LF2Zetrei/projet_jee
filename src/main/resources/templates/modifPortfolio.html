@@ -31,10 +31,32 @@
             <input type="hidden" name="id" th:value="${project.id}"/>
             <div><input type="submit" value="modifier"/></div>
         </form>
+        <button th:onclick="|deleteProject(${project.id})|">Supprimer</button>
     </li>
 </ul>
 
 <script>
+    function deleteProject(projectId) {
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: `/projects/delete?id=${projectId}`, // envoie l'ID du projet en paramètre
+            type: 'DELETE',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function() {
+                $(`li[data-project-id="${projectId}"]`).remove(); // Retire l'élément de la liste
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur lors de la suppression du projet. Détails de l'erreur:");
+                console.error("Statut:", status);
+                console.error("Erreur:", error);
+                console.error("Réponse complète:", xhr.responseText);
+            }
+        });
+
+    }
     function createProject(form) {
         const formData = $(form).serialize();
         const csrfToken = $("meta[name='_csrf']").attr("content");

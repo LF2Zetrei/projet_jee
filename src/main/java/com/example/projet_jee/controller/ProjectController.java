@@ -34,4 +34,10 @@ public class ProjectController {
         return ResponseEntity.ok().build(); // Retourne une réponse 200 OK
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> delete(@RequestParam Long id) {
+        projectService.deleteProject(id);
+        return ResponseEntity.ok().build(); // retourne une réponse 200 OK
+    }
+
 }
