@@ -32,4 +32,9 @@ public class ProjectService {
         }
         projectRepository.save(project);
     }
+
+    public void deleteProject(Long id){
+        Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Projet introuvable"));
+        projectRepository.delete(project);
+    }
 }
