@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**", "/login", "/home", "/", "/register").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/portfolios/**","/user", "/projects/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated())
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
