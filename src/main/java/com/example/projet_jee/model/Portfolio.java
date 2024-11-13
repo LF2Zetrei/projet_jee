@@ -21,7 +21,7 @@ public class Portfolio {
     private LocalDateTime publishedOn;
     private LocalDateTime updatedOn;
 
-    @OneToMany(mappedBy = "portfolio", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Project> projects = new ArrayList<>();
 

@@ -1,5 +1,10 @@
 <!DOCTYPE html>
+
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -15,13 +20,53 @@
   <li th:each="portfolio : ${portfolios}">
     <h2 th:text="${portfolio.title}">Titre du Portfolio</h2>
     <h2 th:text="${portfolio.description}">Description du Portfolio</h2>
+    <td>
+      <button th:data-id="${portfolio.id}" onclick="deletePortfolio(this)">Supprimer</button>
+    </td>
     <ul>
       <li th:each="project : ${portfolio.projects}">
         <h3 th:text="${project.title}">Titre du projet</h3>
         <p th:text="${project.description}">Description du projet</p>
       </li>
     </ul>
-    <h3><a th:href="@{/portfolios/modifPortfolio(id=${portfolio.id})}">Modifier ce portfolio</a></h3>
   </li>
+</ul>
+
+</body>
+
+<script>
+  function deletePortfolio(button) {
+    const id = button.getAttribute("data-id");
+
+    // Récupérer le token CSRF depuis le meta-tag
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce portfolio ?")) {
+      fetch(`/admin/portfolios/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          [csrfHeader]: csrfToken // Ajoute le token CSRF dans l'en-tête
+        }
+      })
+              .then(response => {
+                if (response.ok) {
+                  alert("Portfolio supprimé avec succès");
+                  window.location.reload();
+                } else {
+                  return response.text().then(text => {
+                    console.error("Erreur de suppression :", response.status, text);
+                    alert("Erreur lors de la suppression du portfolio : " + text);
+                  });
+                }
+              })
+              .catch(error => {
+                console.error("Erreur réseau ou serveur :", error);
+                alert("Erreur lors de la suppression du portfolio. Vérifiez la console pour plus de détails.");
+              });
+    }
+  }
+</script>
 
 </html>
