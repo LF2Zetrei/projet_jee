@@ -13,6 +13,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<div id="adminHeaderContainer"></div>
 <h1>Portfolios:</h1>
 <h2><a th:href="@{/user}">Ma page utilisateur</a></h2>
 
@@ -35,6 +36,13 @@
 </body>
 
 <script>
+  fetch('/headerAdmin.html')
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById("adminHeaderContainer").innerHTML = html;
+          })
+          .catch(error => console.error('Erreur lors du chargement du bandeau:', error));
+
   function deletePortfolio(button) {
     const id = button.getAttribute("data-id");
 
