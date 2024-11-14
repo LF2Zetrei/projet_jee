@@ -3,7 +3,9 @@ package com.example.projet_jee.controller;
 import com.example.projet_jee.model.Portfolio;
 import com.example.projet_jee.repository.PortfolioRepository;
 import com.example.projet_jee.service.PortfolioService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -55,6 +57,19 @@ public class PortfolioController {
         return portfolio;
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> delete(@RequestParam Long id) {
+        try {
+            portfolioService.deletePortfolio(id);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException e) {
+            System.err.println("Portfolio introuvable : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            System.err.println("Erreur serveur lors de la suppression : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 
 }

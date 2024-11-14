@@ -11,7 +11,7 @@
 <h1>Portfolios:</h1>
 <h2><a th:href="@{/user}">Ma page utilisateur</a></h2>
 <ul id="portfolio-list">
-    <li th:each="portfolio : ${portfolios}">
+    <li th:each="portfolio : ${portfolios}" th:attr="data-portfolio-id=${portfolio.id}">
         <h2 th:text="${portfolio.title}">Titre du Portfolio</h2>
         <h2 th:text="${portfolio.description}">Description du Portfolio</h2>
         <ul>
@@ -21,6 +21,7 @@
             </li>
         </ul>
         <h3><a th:href="@{/portfolios/modifPortfolio(id=${portfolio.id})}">Modifier ce portfolio</a></h3>
+        <button type="button" th:onclick="'deletePortfolio(' + ${portfolio.id} + ')'">Supprimer</button>
     </li>
 </ul>
 
@@ -32,6 +33,26 @@
 </form>
 
 <script>
+    function deletePortfolio(portfolioId){
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: `/portfolios/delete?id=${portfolioId}`, // envoie l'ID du projet en paramètre
+            type: 'DELETE',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function() {
+                $(`li[data-portfolio-id="${portfolioId}"]`).remove(); // Retire l'élément de la liste
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur lors de la suppression du projet. Détails de l'erreur:");
+                console.error("Statut:", status);
+                console.error("Erreur:", error);
+                console.error("Réponse complète:", xhr.responseText);
+            }
+        });
+    }
     function createPortfolio(form) {
         const formData = $(form).serialize();
         const csrfToken = $("meta[name='_csrf']").attr("content");
@@ -56,6 +77,7 @@
                         <h2>${response.description}</h2>
                         <ul id="project-list-${response.id}"></ul>
                         <h3><a href="/portfolios/modifPortfolio?id=${response.id}">Modifier ce portfolio</a></h3>
+                        <button onclick="deletePortfolio(${response.id})">Supprimer</button>
                     </li>
                 `);
             },
