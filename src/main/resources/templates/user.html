@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1 th:inline="text">Hello, you are an user <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
-<a th:href="@{/portfolios}"> mes portfolios</a>
+<a th:href="@{/portfolios/{username}/myPortfolio(username=${#authentication.getName()})}">Mes portfolios</a>
 <a th:href="@{/user/profil(username=${#authentication.getName()})}">Mon profil</a>
 <h1 th:text="${#authentication.getName()}"></h1>
 <form th:action="@{/logout}" method="post">

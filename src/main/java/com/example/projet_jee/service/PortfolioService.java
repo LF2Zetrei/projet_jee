@@ -1,6 +1,7 @@
 package com.example.projet_jee.service;
 
 import com.example.projet_jee.model.Portfolio;
+import com.example.projet_jee.model.User;
 import com.example.projet_jee.repository.PortfolioRepository;
 import com.example.projet_jee.repository.ProjectRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,8 +15,9 @@ public class PortfolioService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public Portfolio createPortfolio(String title, String description){
+    public Portfolio createPortfolio(String title, String description, User user){
         Portfolio portfolio = new Portfolio(title, description);
+        portfolio.getOwners().add(user);
         portfolioRepository.save(portfolio);
         return portfolio;
     }
