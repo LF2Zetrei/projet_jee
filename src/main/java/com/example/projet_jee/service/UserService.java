@@ -27,4 +27,12 @@ public class UserService {
     public User getUserbyUsername(String username) {
         return userRepository.findByUsername(username).get();
     }
+
+    public void modifyUser(String username, Long id) {
+        User user = userRepository.findById(id).get();
+        if (username != null && !username.isEmpty()) {
+            user.setUsername(username);
+        }
+        userRepository.save(user);
+    }
 }
