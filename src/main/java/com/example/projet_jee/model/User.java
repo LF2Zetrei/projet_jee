@@ -1,6 +1,10 @@
 package com.example.projet_jee.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -14,6 +18,10 @@ public class User {
     private String password;
     private String roles;
 
+    @ManyToMany(mappedBy = "owners", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Portfolio> portfolios = new ArrayList<>();
+
 
     public User() {}
 
@@ -21,6 +29,14 @@ public class User {
         this.username = username;
         this.password = password;
         this.roles = roles;
+    }
+
+    public List<Portfolio> getPortfolios() {
+        return portfolios;
+    }
+
+    public void setPortfolios(List<Portfolio> portfolios) {
+        this.portfolios = portfolios;
     }
 
     public Long getId() {

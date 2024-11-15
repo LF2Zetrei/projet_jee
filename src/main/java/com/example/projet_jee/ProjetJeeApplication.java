@@ -37,6 +37,12 @@ public class ProjetJeeApplication implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 		users.save(new User("user", passwordEncoder.encode("password"), "ROLE_USER"));
 		users.save(new User("admin", passwordEncoder.encode("password"), "ROLE_ADMIN"));
+		User user1 = new User("remy", passwordEncoder.encode("remy"), "ROLE_USER");
+		User user2 = new User("Antoine", passwordEncoder.encode("321"), "ROLE_USER");
+		users.save(user1);
+		users.save(user2);
+
+
 		Portfolio portfolio = new Portfolio();
 		portfolio.setTitle("portfolio1");
 		portfolio.setDescription("description portfolio 1");
@@ -68,5 +74,14 @@ public class ProjetJeeApplication implements ApplicationRunner {
 		projects.save(project2);
 		projects.save(project);
 		portfolios.save(portfolio);
+
+		user1.getPortfolios().add(portfolio);
+		user2.getPortfolios().add(portfolio);
+		portfolio.getOwners().add(user1);
+		portfolio.getOwners().add(user2);
+
+		portfolios.save(portfolio);
+		users.save(user1);
+		users.save(user2);
 	}
 }

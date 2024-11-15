@@ -25,6 +25,9 @@ public class Portfolio {
     @JsonIgnore
     private List<Project> projects = new ArrayList<>();
 
+    @ManyToMany
+    private List<User> owners = new ArrayList<>();
+
     public Portfolio() {
         this.publishedOn = LocalDateTime.now();
     }
@@ -45,6 +48,14 @@ public class Portfolio {
 
     public void addProject(Project project) {
         this.projects.add(project);
+    }
+
+    public List<User> getOwners() {
+        return owners;
+    }
+
+    public void setOwners(List<User> owners) {
+        this.owners = owners;
     }
 
     public String getDescription() {
