@@ -23,4 +23,8 @@ public class UserService {
         User user = new User(username, passwordEncoder.encode(password), "ROLE_USER");
         userRepository.save(user);
     }
+
+    public User getUserbyUsername(String username) {
+        return userRepository.findByUsername(username).get();
+    }
 }
