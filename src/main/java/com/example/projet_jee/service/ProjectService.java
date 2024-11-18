@@ -17,8 +17,11 @@ public class ProjectService {
 
     public Project createProject(String title, String description, Long id){
         Project project = new Project(title, description);
-        project.setPortfolio(portfolioRepository.findById(id).orElseThrow());
+        Portfolio portfolio = portfolioRepository.findById(id).get();
+        project.setPortfolio(portfolio);
         projectRepository.save(project);
+        portfolio.getProjects().add(project);
+        portfolioRepository.save(portfolio);
         return project;
     }
 

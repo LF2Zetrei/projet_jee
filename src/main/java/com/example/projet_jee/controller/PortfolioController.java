@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +44,9 @@ public class PortfolioController {
         return "portfolios";
     }
 
-    @GetMapping("{username}/myPortfolio")
-    public String getPortfolioByUsername(@PathVariable String username, Model model){
+    @GetMapping("/myPortfolio")
+    public String getPortfolioByUsername(Principal principal, Model model){
+        String username = principal.getName();
         User user = userRepository.findByUsername(username).get();
         model.addAttribute("portfolios", user.getPortfolios());
         return "portfolios";
