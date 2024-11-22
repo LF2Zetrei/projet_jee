@@ -49,8 +49,6 @@ public class PortfolioAdminController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Portfolio not found");
             }
         } catch (Exception e) {
-            // Log de l'erreur pour aider au diagnostic
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur interne lors de la suppression");
         }
     }

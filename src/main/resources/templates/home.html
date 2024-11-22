@@ -2,12 +2,39 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>Spring Security Example</title>
+    <link rel="stylesheet" th:href="@{/fragments/css/header.css}" />
 </head>
 <body>
-<h1>Welcome!</h1>
+<div class="header">
+    <div th:insert="fragments/header :: header"></div>
+    <div th:insert="fragments/header :: headerStyle"></div>
+    <div th:insert="fragments/header :: headerScript"></div>
+</div>
 
-<p>Click <a th:href="@{/login}">here</a> to log in.</p>
-<p>Click <a th:href="@{/register}">here</a> to register.</p>
+<div class="haut"></div>
+<div style="background: white;" class="body">
+    <h1>Welcome!</h1>
+</div>
+
+<div>
+
+</div>
+
+
 
 </body>
 </html>
+
+<style>
+    body{
+        background: #58838c;
+    }
+    .haut {
+
+        height: 150px;
+    }
+
+    .body {
+        height: 100%;
+    }
+</style>
