@@ -46,6 +46,7 @@ public class ProjetJeeApplication implements ApplicationRunner {
 		Portfolio portfolio = new Portfolio();
 		portfolio.setTitle("portfolio1");
 		portfolio.setDescription("description portfolio 1");
+		portfolio.setEstPublic(true);
 
 		portfolio = portfolios.save(portfolio);
 		System.out.println(portfolio);

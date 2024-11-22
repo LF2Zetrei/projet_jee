@@ -13,10 +13,15 @@
 
 <div class="haut"></div>
 <div style="background: white;" class="body">
-    <h1>Welcome!</h1>
-</div>
+    <h1>Bienvenue sur notre site</h1>
 
-<div>
+    <h2>Portfolios Publics</h2>
+        <ul>
+            <li th:each="portfolio : ${publicPortfolios}">
+                <h3 th:text="${portfolio.title}">Titre du portfolio</h3>
+                <p th:text="${portfolio.description}">Description du portfolio</p>
+            </li>
+        </ul>
 
 </div>
 
