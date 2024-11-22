@@ -52,6 +52,18 @@ public class PortfolioController {
         return "portfolios";
     }
 
+    @PutMapping("/modif")
+    public ResponseEntity<Void> update(@RequestParam String title, @RequestParam String description, @RequestParam Long id) {
+        portfolioService.modifyPortfolio(title, description, id);
+        return ResponseEntity.ok().build(); // Retourne une réponse 200 OK
+    }
+    @PutMapping("/switchPublic")
+    public ResponseEntity<Void> switchPublic(@RequestParam Long id) {
+        Portfolio portfolio = this.portfolioRepository.findById(id).get();
+        portfolioService.setPublic(portfolio);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/modifPortfolio")
     public String modifPortfolio(@RequestParam String id, Model model){
         Portfolio portfolio = portfolioRepository.findById(Long.valueOf(id)).get();

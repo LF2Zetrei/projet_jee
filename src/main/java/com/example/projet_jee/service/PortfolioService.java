@@ -33,6 +33,23 @@ public class PortfolioService {
         return portfolio;
     }
 
+    public void setPublic(Portfolio portfolio){
+        portfolio.setEstPublic(!portfolio.isEstPublic());
+        portfolioRepository.save(portfolio);
+    }
+
+    public void modifyPortfolio(String title , String description, Long id){
+        Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(() -> new RuntimeException("Portfolio introuvable"));
+        if (title != null && !title.isEmpty()) {
+            portfolio.setTitle(title);
+        }
+        if (description != null && !description.isEmpty()) {
+            portfolio.setDescription(description);
+        }
+        portfolioRepository.save(portfolio);
+
+    }
+
     public void deletePortfolio(Long id) {
         Portfolio portfolio = portfolioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Portfolio introuvable pour l'id : " + id));

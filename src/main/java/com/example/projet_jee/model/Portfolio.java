@@ -20,6 +20,15 @@ public class Portfolio {
     private String description;
     private LocalDateTime publishedOn;
     private LocalDateTime updatedOn;
+    private boolean estPublic;
+
+    public boolean isEstPublic() {
+        return estPublic;
+    }
+
+    public void setEstPublic(boolean estPublic) {
+        this.estPublic = estPublic;
+    }
 
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
@@ -36,6 +45,7 @@ public class Portfolio {
         this.title = title;
         this.description = description;
         this.publishedOn = LocalDateTime.now();
+        this.estPublic = true;
     }
 
     public List<Project> getProjects() {
