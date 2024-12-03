@@ -1,35 +1,30 @@
 <!DOCTYPE html>
-
-<meta name="_csrf" th:content="${_csrf.token}"/>
-<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <title>Portfolios</title>
+    <title>Mon Profil - MyPortfolio</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
-<div id="adminHeaderContainer"></div>
-<h1>Mon profil</h1>
-<h3 class="username-display" th:text="${user.username}">Titre du projet</h3>
-<form th:attr="data-user-id=${user.id}" onsubmit="event.preventDefault(); modifyUserInfo(this);">
-    <div><label>username: <input type="text" name="username" th:value="${user.username}"/></label></div>
-    <input type="hidden" name="id" th:value="${user.id}"/>
-    <div><input type="submit" value="modifier"/></div>
-</form>
-
-
-</body>
+<div class="profile">
+    <h1>Mon Profil</h1>
+    <h3 class="username-display" th:text="${user.username}">Nom d'utilisateur</h3>
+    <form th:attr="data-user-id=${user.id}" onsubmit="event.preventDefault(); modifyUserInfo(this);">
+        <label>Nom d'utilisateur :
+            <input type="text" name="username" th:value="${user.username}" required />
+        </label>
+        <input type="hidden" name="id" th:value="${user.id}" />
+        <input type="submit" value="Modifier" />
+    </form>
+</div>
 
 <script>
-    function modifyUserInfo(form){
+    function modifyUserInfo(form) {
         const formData = $(form).serialize();
-        const userId = $(form).find("input[name='id']").val();
-
         const csrfToken = $("meta[name='_csrf']").attr("content");
         const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
@@ -42,11 +37,99 @@
             },
             success: function(response) {
                 $('.username-display').text($(form).find("input[name='username']").val());
+                alert("Profil mis à jour avec succès !");
             },
             error: function(error) {
-                console.error("erreur lors de la mise à jour du pojet", error);
+                console.error("Erreur lors de la mise à jour du profil", error);
+                alert("Une erreur est survenue, veuillez réessayer.");
             }
-        })
+        });
     }
 </script>
+</body>
 
+</html>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .profile {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        animation: fadeIn 1.2s ease-in-out;
+    }
+
+    .profile h1 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .profile .username-display {
+        color: #578289;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .profile label {
+        display: block;
+        font-size: 1rem;
+        margin: 10px 0;
+        text-align: left;
+    }
+
+    .profile input[type="text"],
+    .profile input[type="hidden"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    .profile input[type="submit"] {
+        background-color: #578289;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-size: 1rem;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+    .profile input[type="submit"]:hover {
+        background-color: #3b6173;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

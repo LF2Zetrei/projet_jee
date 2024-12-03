@@ -1,45 +1,258 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example</title>
-    <link rel="stylesheet" th:href="@{/fragments/css/header.css}" />
+    <meta charset="UTF-8">
+    <title>MyPortfolio - Accueil</title>
 </head>
 <body>
-<div class="header">
-    <div th:insert="fragments/header :: header"></div>
-    <div th:insert="fragments/header :: headerStyle"></div>
-    <div th:insert="fragments/header :: headerScript"></div>
+<header th:fragment="header" class="container">
+    <div class="logo">
+        <h1>MyPortfolio</h1>
+    </div>
+    <div th:if="${#authentication.name == 'anonymousUser'}" class="navigation">
+        <button class="btn btn-primary"><a th:href="@{/register}">S'inscrire</a></button>
+        <button class="btn btn-secondary"><a th:href="@{/login}">Connexion</a></button>
+    </div>
+    <div th:if="${#authentication.name != 'anonymousUser'}" class="navigation">
+        <button class="btn btn-primary"> <a th:href="@{/portfolios/myPortfolio}">Mes portfolios</a></button>
+        <button class="btn btn-primary"> <a th:href="@{/user}">Ma page utilisateur</a></button>
+        <button class="btn btn-primary"><a th:href="@{/user/profil(username=${#authentication.getName()})}">Mon profil</a></button>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+    </div>
+
+</header>
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>Bienvenue sur MyPortfolio</h1>
+        <p>Créez, partagez et découvrez des portfolios impressionnants.</p>
+        <p>Authentifé: <span th:text="${#authentication.authenticated}"></span></p>
+    </div>
 </div>
 
-<div class="haut"></div>
-<div style="background: white;" class="body">
-    <h1>Bienvenue sur notre site</h1>
+<main class="main-content">
+    <section class="presentation">
+        <div class="text-content">
+            <h2>Pourquoi choisir MyPortfolio ?</h2>
+            <p>
+                MyPortfolio vous permet de mettre en valeur vos projets professionnels et créatifs.
+                Personnalisez vos portfolios pour qu'ils correspondent parfaitement à votre style et à vos compétences.
+            </p>
+        </div>
+        <div class="image-content">
+            <img src="portfolio-example.jpg" alt="Exemple de portfolio">
+        </div>
+    </section>
 
-    <h2>Portfolios Publics</h2>
+    <section class="public-portfolios">
+        <h2>Portfolios Publics</h2>
         <ul>
             <li th:each="portfolio : ${publicPortfolios}">
                 <h3 th:text="${portfolio.title}">Titre du portfolio</h3>
                 <p th:text="${portfolio.description}">Description du portfolio</p>
             </li>
         </ul>
+    </section>
+</main>
 
-</div>
-
-
+<footer class="footer">
+    <p>© 2024 MyPortfolio - Tous droits réservés</p>
+</footer>
 
 </body>
 </html>
+<script>
+    const header = document.querySelector('.container');
 
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
 <style>
-    body{
-        background: #58838c;
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
     }
-    .haut {
 
-        height: 150px;
+    h1, h2, h3, p {
+        margin: 0;
+        padding: 0;
     }
 
-    .body {
-        height: 100%;
+    .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        background-color: transparent;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        transition: background-color 0.3s ease, padding 0.3s ease;
+        z-index: 1000;
+        box-sizing: border-box;
+    }
+
+    .container.scrolled {
+        background-color: #333;
+        color: white;
+        padding: 10px 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo h1 {
+        font-size: 24px;
+        color: #578289;
+        margin: 0;
+    }
+
+    .navigation {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .navigation .btn {
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .navigation .btn-primary {
+        background-color: #578289;
+        color: white;
+    }
+
+    .navigation .btn-secondary {
+        background-color: white;
+        color: #578289;
+        border: 1px solid #578289;
+    }
+
+    .navigation .btn a {
+        text-decoration: none;
+        color: inherit;
+        display: inline-block;
+    }
+
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px 20px;
+        }
+
+        .logo h1 {
+            font-size: 20px;
+        }
+
+        .navigation {
+            gap: 5px;
+        }
+
+        .navigation .btn {
+            padding: 6px 12px;
+        }
+    }
+
+
+    .hero {
+        background: #578289;
+        color: white;
+        text-align: center;
+        padding: 150px 20px 100px;
+        margin-top: 80px;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+    }
+
+
+    .main-content {
+        padding: 40px;
+    }
+
+    .presentation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 50px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-content {
+        width: 50%;
+        padding-right: 20px;
+    }
+
+    .text-content h2 {
+        color: #578289;
+        margin-bottom: 15px;
+    }
+
+    .image-content {
+        width: 50%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .image-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+
+    .public-portfolios h2 {
+        color: #578289;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .public-portfolios ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .public-portfolios li {
+        background: white;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .public-portfolios h3 {
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+
+    .footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
     }
 </style>

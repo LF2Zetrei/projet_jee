@@ -1,14 +1,120 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Register</title>
+    <meta charset="UTF-8">
+    <title>Inscription - MyPortfolio</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<h2>Register</h2>
-<form th:action="@{/register}" method="post">
-    <div><label> User Name : <input type="text" name="username" required/> </label></div>
-    <div><label> Password: <input type="password" name="password" required/> </label></div>
-    <div><input type="submit" value="Register"/></div>
-</form>
+<div class="register">
+    <form th:action="@{/register}" method="post">
+        <label>Nom d'utilisateur :
+            <input type="text" name="username" placeholder="Votre nom d'utilisateur" required/>
+        </label>
+        <label>Mot de passe :
+            <input type="password" name="password" placeholder="Votre mot de passe" required/>
+        </label>
+        <input type="submit" value="S'inscrire"/>
+    </form>
+    <div class="options">
+        <h3>Déjà inscrit ? <a th:href="@{/login}">Connectez-vous !</a></h3>
+        <h3>Retourner sur la page d'accueil en cliquant <a th:href="@{/}">ici</a></h3>
+    </div>
+</div>
 </body>
 </html>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .register {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        animation: fadeIn 1.2s ease-in-out;
+    }
+
+    .register label {
+        display: block;
+        font-size: 1rem;
+        margin: 10px 0;
+        text-align: left;
+    }
+
+    .register input[type="text"],
+    .register input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    .register input[type="submit"] {
+        background-color: #578289;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-size: 1rem;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+    .register input[type="submit"]:hover {
+        background-color: #3b6173;
+    }
+
+    .options {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .options h3 {
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 10px;
+        font-weight: normal;
+    }
+
+    .options h3 a {
+        color: #578289;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .options h3 a:hover {
+        color: #3b6173;
+        text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

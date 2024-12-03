@@ -8,34 +8,259 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Ajout de jQuery -->
 </head>
 <body>
-<a th:href="@{/portfolios/myPortfolio}">Mes portfolios</a>
-<h2><a th:href="@{/user}">Ma page utilisateur</a></h2>
-
-<h1>Créer un projet pour le portfolio : <span th:text="${portfolio.title}"></span></h1>
-
-<form onsubmit="event.preventDefault(); createProject(this)">
-    <div><label>Title: <input type="text" name="title" required/></label></div>
-    <div><label>Description: <input type="text" name="description" required/></label></div>
-    <input type="hidden" name="id" th:value="${portfolio.id}"/>
-    <div><input type="submit" value="Register"/></div>
-</form>
-
-<h3>Projets du Portfolio</h3>
-<ul id="project-list">
-    <li th:each="project : ${portfolio.projects}" th:attr="data-project-id=${project.id}">
-        <h3 th:text="${project.title}">Titre du projet</h3>
-        <p th:text="${project.description}">Description du projet</p>
-        <form onsubmit="event.preventDefault(); modifyProject(this);">
-            <div><label>Title: <input type="text" name="title" th:value="${project.title}"/></label></div>
-            <div><label>Description: <input type="text" name="description" th:value="${project.description}"/></label></div>
-            <input type="hidden" name="id" th:value="${project.id}"/>
-            <div><input type="submit" value="modifier"/></div>
+<header>
+    <div class="logo">
+        <h1>MyPortfolio</h1>
+    </div>
+    <div class="navigation">
+        <a th:href="@{/portfolios/myPortfolio}">Mes portfolios</a>
+        <a th:href="@{/user}">Ma page utilisateur</a>
+        <a th:href="@{/user/profil(username=${#authentication.getName()})}">Mon profil</a>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
         </form>
-        <button th:onclick="|deleteProject(${project.id})|">Supprimer</button>
-    </li>
-</ul>
+    </div>
+</header>
+
+<div class="container">
+    <h1>Créer un projet pour le portfolio : <span th:text="${portfolio.title}"></span></h1>
+    <form onsubmit="event.preventDefault(); createProject(this)">
+        <label>Title: <input type="text" name="title" required/></label>
+        <label>Description: <input type="text" name="description" required/></label>
+        <input type="hidden" name="id" th:value="${portfolio.id}"/>
+        <input type="submit" value="Créer"/>
+    </form>
+
+    <h3>Projets du Portfolio</h3>
+    <ul id="project-list">
+        <li th:each="project : ${portfolio.projects}" th:attr="data-project-id=${project.id}">
+            <h3 th:text="${project.title}"></h3>
+            <p th:text="${project.description}"></p>
+            <form onsubmit="event.preventDefault(); modifyProject(this);">
+                <label>Title: <input type="text" name="title" th:value="${project.title}"/></label>
+                <label>Description: <input type="text" name="description" th:value="${project.description}"/></label>
+                <input type="hidden" name="id" th:value="${project.id}"/>
+                <input type="submit" value="Modifier"/>
+            </form>
+            <button th:onclick="|deleteProject(${project.id})|">Supprimer</button>
+        </li>
+    </ul>
+</div>
+
+<footer>
+    <p>© 2024 MyPortfolio - Tous droits réservés</p>
+</footer>
+</body>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #f9f9f9;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    header .logo h1 {
+        font-size: 24px;
+        margin: 0;
+        color: white;
+    }
+
+    header .navigation {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    header .navigation a {
+        text-decoration: none;
+        color: #ecf0f1;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    header .navigation a:hover {
+        color: #1abc9c;
+    }
+
+    header form {
+        margin: 0;
+    }
+
+    header form input[type="submit"] {
+        padding: 8px 12px;
+        background-color: #e74c3c;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    header form input[type="submit"]:hover {
+        background-color: #c0392b;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 120px auto 30px;
+        padding: 20px;
+        background: #ecf0f1;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        flex-grow: 1;
+    }
+
+    h1, h3 {
+        text-align: center;
+    }
+
+    h1 {
+        color: #34495e;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        color: #7f8c8d;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        background: #bdc3c7;
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    li h3 {
+        margin: 0;
+        color: #2c3e50;
+    }
+
+    li p {
+        color: #7f8c8d;
+    }
+
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    form label {
+        font-weight: bold;
+        color: #34495e;
+    }
+
+    form input[type="text"], form input[type="submit"] {
+        padding: 10px;
+        border: 1px solid #dcdcdc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    form input[type="text"] {
+        background: #ffffff;
+    }
+
+    form input[type="submit"] {
+        background-color: #1abc9c;
+        color: #ffffff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    form input[type="submit"]:hover {
+        background-color: #16a085;
+    }
+
+    button {
+        padding: 10px 15px;
+        background-color: #e74c3c;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #c0392b;
+    }
+
+
+    footer {
+        background: #2c3e50;
+        color: #ecf0f1;
+        text-align: center;
+        padding: 20px 0;
+        margin-top: auto;
+    }
+
+
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px 20px;
+        }
+
+        header .navigation {
+            gap: 10px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .container {
+            margin: 100px 20px;
+            padding: 15px;
+        }
+    }
+</style>
+
 
 <script>
+    const header = document.querySelector('.container');
+
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
     function deleteProject(projectId) {
         const csrfToken = $("meta[name='_csrf']").attr("content");
         const csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -128,5 +353,5 @@
     }
 </script>
 
-</body>
+
 </html>

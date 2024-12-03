@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -8,39 +8,75 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<h1>Portfolios:</h1>
-<h2><a th:href="@{/user}">Ma page utilisateur</a></h2>
-<ul id="portfolio-list">
-    <li th:each="portfolio : ${portfolios}" th:attr="data-portfolio-id=${portfolio.id}">
-        <h3 th:text="${portfolio.title}">Titre du Portfolio</h3>
-        <h2 th:text="${portfolio.description}">Description du Portfolio</h2>
 
-        <form onsubmit="event.preventDefault(); modifyPortfolio(this);">
-            <div><label>Title: <input type="text" name="title" th:value="${portfolio.title}"/></label></div>
-            <div><label>Description: <input type="text" name="description" th:value="${portfolio.description}"/></label></div>
-            <input type="hidden" name="id" th:value="${portfolio.id}"/>
-            <div><input type="submit" value="modifier"/></div>
+<header>
+    <div class="logo">
+        <h1>MyPortfolio</h1>
+    </div>
+    <div class="navigation">
+        <a th:href="@{/portfolios/myPortfolio}">Mes portfolios</a>
+        <a th:href="@{/user}">Ma page utilisateur</a>
+        <a th:href="@{/user/profil(username=${#authentication.getName()})}">Mon profil</a>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
         </form>
-        <div><label>estPublic: <input type="checkbox" name="estPublic" th:action="@{/portfolios/switchPublic(id=${portfolio.id})}"/></label></div>
-        <ul>
-            <li th:each="project : ${portfolio.projects}">
-                <h3 th:text="${project.title}">Titre du projet</h3>
-                <p th:text="${project.description}">Description du projet</p>
-            </li>
-        </ul>
-        <h3><a th:href="@{/portfolios/modifPortfolio(id=${portfolio.id})}">Modifier ce portfolio</a></h3>
-        <button type="button" th:onclick="'deletePortfolio(' + ${portfolio.id} + ')'">Supprimer</button>
-    </li>
-</ul>
+    </div>
+</header>
 
-<h1>Créer un nouveau portfolio</h1>
-<form id="create-portfolio-form" onsubmit="event.preventDefault(); createPortfolio(this)">
-    <div><label>Titre : <input type="text" name="title" required/></label></div>
-    <div><label>Description : <input type="text" name="description" required/></label></div>
-    <div><input type="submit" value="Enregistrer"/></div>
-</form>
+<div class="container">
+    <h1>Portfolios:</h1>
+    <h1>Créer un nouveau portfolio</h1>
+    <form id="create-portfolio-form" onsubmit="event.preventDefault(); createPortfolio(this)">
+        <div><label>Titre : <input type="text" name="title" required/></label></div>
+        <div><label>Description : <input type="text" name="description" required/></label></div>
+        <div><input type="submit" value="Enregistrer"/></div>
+    </form>
+
+    <ul id="portfolio-list">
+        <li th:each="portfolio : ${portfolios}" th:attr="data-portfolio-id=${portfolio.id}">
+            <h3 th:text="${portfolio.title}">Titre du Portfolio</h3>
+            <h2 th:text="${portfolio.description}">Description du Portfolio</h2>
+
+            <form onsubmit="event.preventDefault(); modifyPortfolio(this);">
+                <div><label>Title: <input type="text" name="title" th:value="${portfolio.title}"/></label></div>
+                <div><label>Description: <input type="text" name="description" th:value="${portfolio.description}"/></label></div>
+                <input type="hidden" name="id" th:value="${portfolio.id}"/>
+                <div><input type="submit" value="modifier"/></div>
+            </form>
+            <div><label>estPublic: <input type="checkbox" name="estPublic" th:action="@{/portfolios/switchPublic(id=${portfolio.id})}"/></label></div>
+            <ul>
+                <li class="project-list" th:each="project : ${portfolio.projects}">
+                    <h3 th:text="${project.title}">Titre du projet</h3>
+                    <p th:text="${project.description}">Description du projet</p>
+                </li>
+            </ul>
+            <h3><a th:href="@{/portfolios/modifPortfolio(id=${portfolio.id})}">Modifier ce portfolio</a></h3>
+            <button type="button" th:onclick="'deletePortfolio(' + ${portfolio.id} + ')'">Supprimer</button>
+        </li>
+    </ul>
+</div>
+
+<footer>
+    <p>© 2024 MyPortfolio - Tous droits réservés</p>
+</footer>
+
+
+
+
+</body>
+</html>
 
 <script>
+    const header = document.querySelector('.container');
+
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
     function deletePortfolio(portfolioId){
         const csrfToken = $("meta[name='_csrf']").attr("content");
         const csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -142,5 +178,203 @@
     }
 </script>
 
-</body>
-</html>
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #f9f9f9;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    header .logo h1 {
+        font-size: 24px;
+        margin: 0;
+        color: white;
+    }
+
+    header .navigation {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    header .navigation a {
+        text-decoration: none;
+        color: #ecf0f1;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    header .navigation a:hover {
+        color: #1abc9c;
+    }
+
+    header form {
+        margin: 0;
+    }
+
+    header form input[type="submit"] {
+        padding: 8px 12px;
+        background-color: #e74c3c;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    header form input[type="submit"]:hover {
+        background-color: #c0392b;
+    }
+
+
+    .container {
+        max-width: 900px;
+        margin: 120px auto 30px;
+        padding: 20px;
+        background: #ecf0f1;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        flex-grow: 1;
+    }
+
+    h1, h3 {
+        text-align: center;
+    }
+
+    h1 {
+        color: #34495e;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        color: #7f8c8d;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 20px 0 0;
+    }
+
+    .project-list{
+        background: #ecf0f1;
+    }
+
+    li {
+        background: #bdc3c7;
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    li h3 {
+        margin: 0;
+        color: #2c3e50;
+    }
+
+    li p {
+        color: #7f8c8d;
+    }
+
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    form label {
+        font-weight: bold;
+        color: #34495e;
+    }
+
+    form input[type="text"], form input[type="submit"] {
+        padding: 10px;
+        border: 1px solid #dcdcdc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    form input[type="text"] {
+        background: #ffffff;
+    }
+
+    form input[type="submit"] {
+        background-color: #1abc9c;
+        color: #ffffff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    form input[type="submit"]:hover {
+        background-color: #16a085;
+    }
+
+    button {
+        padding: 10px 15px;
+        background-color: #e74c3c;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #c0392b;
+    }
+
+
+    footer {
+        background: #2c3e50;
+        color: #ecf0f1;
+        text-align: center;
+        padding: 20px 0;
+        margin-top: auto;
+    }
+
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px 20px;
+        }
+
+        header .navigation {
+            gap: 10px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .container {
+            margin: 100px 20px;
+            padding: 15px;
+        }
+    }
+</style>
