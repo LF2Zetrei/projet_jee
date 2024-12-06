@@ -28,7 +28,6 @@
     <div class="hero-content">
         <h1>Bienvenue sur MyPortfolio</h1>
         <p>Créez, partagez et découvrez des portfolios impressionnants.</p>
-        <p>Authentifé: <span th:text="${#authentication.authenticated}"></span></p>
     </div>
 </div>
 
@@ -52,6 +51,7 @@
             <li th:each="portfolio : ${publicPortfolios}">
                 <h3 th:text="${portfolio.title}">Titre du portfolio</h3>
                 <p th:text="${portfolio.description}">Description du portfolio</p>
+                <a th:href="@{/visualiser(id=${portfolio.id})}">Regardez le !</a>
             </li>
         </ul>
     </section>

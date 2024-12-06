@@ -13,9 +13,9 @@
         <h1>MyPortfolio</h1>
     </div>
     <div class="navigation">
-        <a th:href="@{/portfolios/myPortfolio}">Mes portfolios</a>
-        <a th:href="@{/user}">Ma page utilisateur</a>
-        <a th:href="@{/user/profil(username=${#authentication.getName()})}">Mon profil</a>
+        <button class="btn btn-primary"> <a th:href="@{/portfolios/myPortfolio}">Mes portfolios</a></button>
+        <button class="btn btn-primary"> <a th:href="@{/user}">Ma page utilisateur</a></button>
+        <button class="btn btn-primary"><a th:href="@{/user/profil(username=${#authentication.getName()})}">Mon profil</a></button>
         <form th:action="@{/logout}" method="post">
             <input type="submit" value="Sign Out"/>
         </form>

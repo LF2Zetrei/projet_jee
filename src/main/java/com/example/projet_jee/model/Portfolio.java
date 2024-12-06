@@ -45,7 +45,7 @@ public class Portfolio {
         this.title = title;
         this.description = description;
         this.publishedOn = LocalDateTime.now();
-        this.estPublic = true;
+        this.estPublic = false;
     }
 
     public List<Project> getProjects() {

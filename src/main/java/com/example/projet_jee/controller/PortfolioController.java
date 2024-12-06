@@ -37,6 +37,7 @@ public class PortfolioController {
         this.portfolios = portfolioRepository;
     }
 
+
     @GetMapping
     public String showAllPortfolios(Model model){
         List<Portfolio> portfolios = this.portfolios.findAll();
@@ -59,7 +60,8 @@ public class PortfolioController {
     }
     @PutMapping("/switchPublic")
     public ResponseEntity<Void> switchPublic(@RequestParam Long id) {
-        Portfolio portfolio = this.portfolioRepository.findById(id).get();
+        Portfolio portfolio = this.portfolioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Portfolio not found"));
         portfolioService.setPublic(portfolio);
         return ResponseEntity.ok().build();
     }

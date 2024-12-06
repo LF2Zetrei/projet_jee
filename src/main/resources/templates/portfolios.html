@@ -14,9 +14,9 @@
         <h1>MyPortfolio</h1>
     </div>
     <div class="navigation">
-        <a th:href="@{/portfolios/myPortfolio}">Mes portfolios</a>
-        <a th:href="@{/user}">Ma page utilisateur</a>
-        <a th:href="@{/user/profil(username=${#authentication.getName()})}">Mon profil</a>
+        <button class="btn btn-primary"> <a th:href="@{/portfolios/myPortfolio}">Mes portfolios</a></button>
+        <button class="btn btn-primary"> <a th:href="@{/user}">Ma page utilisateur</a></button>
+        <button class="btn btn-primary"><a th:href="@{/user/profil(username=${#authentication.getName()})}">Mon profil</a></button>
         <form th:action="@{/logout}" method="post">
             <input type="submit" value="Sign Out"/>
         </form>
@@ -43,7 +43,10 @@
                 <input type="hidden" name="id" th:value="${portfolio.id}"/>
                 <div><input type="submit" value="modifier"/></div>
             </form>
-            <div><label>estPublic: <input type="checkbox" name="estPublic" th:action="@{/portfolios/switchPublic(id=${portfolio.id})}"/></label></div>
+            <div><label>estPublic:
+                <input type="checkbox" name="estPublic"
+                       th:onclick="|switchPublic(${portfolio.id})|"/>
+            </label></div>
             <ul>
                 <li class="project-list" th:each="project : ${portfolio.projects}">
                     <h3 th:text="${project.title}">Titre du projet</h3>
@@ -77,6 +80,26 @@
             header.classList.remove('scrolled');
         }
     });
+
+    function switchPublic(portfolioId){
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: `/portfolios/switchPublic?id=${portfolioId}`,
+            type: `PUT`,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function() {
+                console.log("Changement de visibilité effectué avec succès !");
+                const checkbox = $(`li[data-portfolio-id="${portfolioId}"] input[name='estPublic']`);
+                checkbox.prop('checked', !checkbox.prop('checked'));
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur :", xhr.responseText || error);
+            }
+        });
+    }
     function deletePortfolio(portfolioId){
         const csrfToken = $("meta[name='_csrf']").attr("content");
         const csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -246,6 +269,25 @@
         font-weight: bold;
         cursor: pointer;
         transition: background-color 0.3s ease;
+    }
+
+    .navigation .btn {
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .navigation .btn-primary {
+        background-color: #578289;
+        color: white;
+    }
+
+    .navigation .btn-secondary {
+        background-color: white;
+        color: #578289;
+        border: 1px solid #578289;
     }
 
     header form input[type="submit"]:hover {

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <h1>MyPortfolio</h1>
+    </div>
+    <div th:if="${#authentication.name == 'anonymousUser'}" class="navigation">
+        <button class="btn btn-primary"><a th:href="@{/register}">S'inscrire</a></button>
+        <button class="btn btn-secondary"><a th:href="@{/login}">Connexion</a></button>
+    </div>
+    <div th:if="${#authentication.name != 'anonymousUser'}" class="navigation">
+        <button class="btn btn-primary"> <a th:href="@{/portfolios/myPortfolio}">Mes portfolios</a></button>
+        <button class="btn btn-primary"> <a th:href="@{/user}">Ma page utilisateur</a></button>
+        <button class="btn btn-primary"><a th:href="@{/user/profil(username=${#authentication.getName()})}">Mon profil</a></button>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+    </div>
+</header>
+
+<div class="container">
+    <div class="title">
+        <h3 th:text="${portfolio.title}"></h3>
+    </div>
+    <div class="description">
+        <p th:text="${portfolio.description}"></p>
+    </div>
+    <div class="projects">
+        <div class="project-card" th:each="project : ${portfolio.projects}">
+            <h3 th:text="${project.title}"></h3>
+            <p th:text="${project.description}"></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+<script>
+    const header = document.querySelector('.container');
+
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #f9f9f9;
+        color: #333;
+        padding-top: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 20px auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .title h3 {
+        font-size: 2rem;
+        color: #2c3e50;
+    }
+
+    .description {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+    }
+
+
+
+    .project-card {
+        background: #ecf0f1;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .project-card h3 {
+        font-size: 1.5rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .project-card p {
+        font-size: 1rem;
+        color: #7f8c8d;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding-top: 60px;
+        }
+
+        .container {
+            padding: 15px;
+        }
+
+        .title h3 {
+            font-size: 1.5rem;
+        }
+
+        .description {
+            font-size: 1rem;
+        }
+    }
+
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 40px;
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    header .logo h1 {
+        font-size: 24px;
+        margin: 0;
+        color: white;
+    }
+
+    header .navigation {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    header .navigation a {
+        text-decoration: none;
+        color: #ecf0f1;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    header .navigation a:hover {
+        color: #1abc9c;
+    }
+
+    header form {
+        margin: 0;
+    }
+
+    header form input[type="submit"] {
+        padding: 8px 12px;
+        background-color: #e74c3c;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    header form input[type="submit"]:hover {
+        background-color: #c0392b;
+    }
+
+    .navigation .btn {
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .navigation .btn-primary {
+        background-color: #578289;
+        color: white;
+    }
+
+    .navigation .btn-secondary {
+        background-color: white;
+        color: #578289;
+        border: 1px solid #578289;
+    }
+</style>
