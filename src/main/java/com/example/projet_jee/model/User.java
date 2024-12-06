@@ -2,18 +2,20 @@ package com.example.projet_jee.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table(name="users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-
+    private UUID id = UUID.randomUUID();
+    @Column(unique=true, nullable=false)
+    @NotBlank(message="Le nom d'utilisateur ne peut pas être vide")
     private String username;
     private String password;
     private String roles;
@@ -39,11 +41,11 @@ public class User {
         this.portfolios = portfolios;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

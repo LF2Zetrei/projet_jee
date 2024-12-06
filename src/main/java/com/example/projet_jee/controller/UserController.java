@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.UUID;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -21,7 +23,7 @@ public class UserController {
         return "profil";
     }
     @PutMapping("/modif")
-    public ResponseEntity<Void> update(@RequestParam String username, @RequestParam Long id) {
+    public ResponseEntity<Void> update(@RequestParam String username, @RequestParam UUID id) {
         userService.modifyUser(username, id);
         return ResponseEntity.ok().build();
     }

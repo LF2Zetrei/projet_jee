@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.UUID;
+
 @Service
 public class UserService {
 
@@ -20,6 +22,9 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public void registerUser(String username, String password) {
+        if (userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("Le nom d'utilisateur est déjà pris.");
+        }
         User user = new User(username, passwordEncoder.encode(password), "ROLE_USER");
         userRepository.save(user);
     }
@@ -28,7 +33,7 @@ public class UserService {
         return userRepository.findByUsername(username).get();
     }
 
-    public void modifyUser(String username, Long id) {
+    public void modifyUser(String username, UUID id) {
         User user = userRepository.findById(id).get();
         if (username != null && !username.isEmpty()) {
             user.setUsername(username);
