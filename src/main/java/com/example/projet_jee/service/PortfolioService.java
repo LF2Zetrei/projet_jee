@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class PortfolioService {
@@ -62,5 +64,11 @@ public class PortfolioService {
         }
         // Ensuite, supprime le Portfolio
         portfolioRepository.delete(portfolio);
+    }
+
+    public boolean isFirstOwner(Long portfolio_id, UUID user_id){
+        Portfolio portfolio = portfolioRepository.findById(portfolio_id).orElseThrow(() -> new RuntimeException("Portfolio introuvable"));
+        User user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User introuvable"));
+        return portfolio.getOwners().get(0).getId().equals(user.getId()) || Objects.equals(user.getRoles(), "ROLE_ADMIN");
     }
 }

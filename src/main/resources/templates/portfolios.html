@@ -54,7 +54,20 @@
                 </li>
             </ul>
             <h3><a th:href="@{/portfolios/modifPortfolio(id=${portfolio.id})}">Modifier ce portfolio</a></h3>
+            <h3><a th:href="@{/visualiser(id=${portfolio.id})}">Voir version public</a></h3>
             <button type="button" th:onclick="'deletePortfolio(' + ${portfolio.id} + ')'">Supprimer</button>
+            <form id="share-portfolio-form" onsubmit="event.preventDefault(); shareToFriend(this);">
+                <input type="hidden" name="portfolio_id" th:value="${portfolio.id}"/>
+                <div>
+                    <label>Entrez le code de votre ami et partagez ce portfolio :
+                        <input type="text" name="friendCode" required/>
+                    </label>
+                </div>
+                <div>
+                    <input type="submit" value="Partager"/>
+                </div>
+            </form>
+
         </li>
     </ul>
 </div>
@@ -80,6 +93,30 @@
             header.classList.remove('scrolled');
         }
     });
+
+    function shareToFriend(form) {
+        const formData = $(form).serialize();
+
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajax({
+            url: '/portfolios/partager',
+            type: 'PUT',
+            data: formData,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function() {
+                alert("Le portfolio a été partagé avec succès !");
+                $(form).find("input[name='friendCode']").val('');
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur lors du partage du portfolio :", xhr.responseText);
+                alert("Une erreur est survenue lors du partage du portfolio. Veuillez vérifier le code de votre ami.");
+            }
+        });
+    }
 
     function switchPublic(portfolioId){
         const csrfToken = $("meta[name='_csrf']").attr("content");
@@ -186,7 +223,20 @@
                     <div><label>estPublic: <input type="checkbox" name="estPublic" th:action="@{/portfolios/switchPublic}"/></label></div>
                     <ul id="project-list-${response.id}"></ul>
                     <h3><a href="/portfolios/modifPortfolio?id=${response.id}">Modifier ce portfolio</a></h3>
+                    <h3><a href="/visualiser?id=${response.id}">Voir version public</a></h3>
                     <button onclick="deletePortfolio(${response.id})">Supprimer</button>
+                    <form id="share-portfolio-form" onsubmit="event.preventDefault(); shareToFriend(this);">
+                <input type="hidden" name="portfolio_id" value="${response.id}"/>
+                <div>
+                    <label>Entrez le code de votre ami et partagez ce portfolio :
+                        <input type="text" name="friendCode" required/>
+                    </label>
+                </div>
+                <div>
+                    <input type="submit" value="Partager"/>
+                </div>
+            </form>
+
                 </li>
             `);
 

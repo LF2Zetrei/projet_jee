@@ -1,6 +1,8 @@
 package com.example.projet_jee.service;
 
+import com.example.projet_jee.model.Portfolio;
 import com.example.projet_jee.model.User;
+import com.example.projet_jee.repository.PortfolioRepository;
 import com.example.projet_jee.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -20,6 +26,10 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PortfolioService portfolioService;
+    @Autowired
+    private PortfolioRepository portfolioRepository;
 
     public void registerUser(String username, String password) {
         if (userRepository.existsByUsername(username)) {
@@ -39,5 +49,27 @@ public class UserService {
             user.setUsername(username);
         }
         userRepository.save(user);
+    }
+
+    public void sharePortfolio(Long id , String codeAmi) {
+        Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Le portfolio n'existe pas"));
+        User user = userRepository.findByCodeAmi(codeAmi).orElseThrow(() -> new IllegalArgumentException("Le codeAmi n'existe pas"));
+        user.getPortfolios().add(portfolio);
+        user.setCode_ami("");
+        userRepository.save(user);
+        portfolio.getOwners().add(user);
+        portfolioRepository.save(portfolio);
+    }
+
+    public void generateFriendsCode(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("L'utilisateur n'existe pas"));
+        if (Objects.equals(user.getCodeAmi(), "") || user.getCodeAmi().isEmpty()) {
+            String generatedCode = UUID.randomUUID().toString().replace("-", "").substring(0, 12).toUpperCase();
+            user.setCode_ami(generatedCode);
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("Le code ami a déjà été généré");
+        }
     }
 }

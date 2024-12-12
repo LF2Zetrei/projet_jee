@@ -1,15 +1,15 @@
 package com.example.projet_jee.controller;
 
+import com.example.projet_jee.model.User;
+import com.example.projet_jee.repository.UserRepository;
 import com.example.projet_jee.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @Controller
@@ -17,16 +17,37 @@ import java.util.UUID;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/profil")
     public String profil(@RequestParam String username, Model model) {
         model.addAttribute("user", userService.getUserbyUsername(username));
         return "profil";
     }
+
     @PutMapping("/modif")
     public ResponseEntity<Void> update(@RequestParam String username, @RequestParam UUID id) {
         userService.modifyUser(username, id);
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/partager")
+    public ResponseEntity<Void> partager(@RequestParam Long portfolio_id, @RequestParam String friendCode){
+        userService.sharePortfolio( portfolio_id , friendCode);
+        return ResponseEntity.ok().build();
+    }
 
+
+    @PutMapping("/genererCode")
+    public ResponseEntity<Void> generateFriendsCode(Principal principal) {
+        try {
+            String username = principal.getName();
+            userService.generateFriendsCode(username);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            System.err.println("Erreur : " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

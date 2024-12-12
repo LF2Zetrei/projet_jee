@@ -20,9 +20,36 @@
         <input type="hidden" name="id" th:value="${user.id}" />
         <input type="submit" value="Modifier" />
     </form>
+
+    <div><label>
+        <h3 th:text="${user.codeAmi ?: 'Pas encore généré'}"></h3>
+        <input type="button" name="estPublic" value="Générez un code ami"
+               th:onclick="genererCode()"/>
+    </label></div>
+
+
 </div>
 
 <script>
+    function genererCode() {
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $.ajax({
+            url: `/user/genererCode`,
+            type: `PUT`,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function () {
+            alert("Votre code à bien été généré");
+            location.reload();
+            },
+            error: function (xhr) {
+                console.error("Erreur lors de la génération du code ami :", xhr.responseText);
+                alert("Une erreur est survenue : " + xhr.responseText);
+            }
+        });
+    }
     function modifyUserInfo(form) {
         const formData = $(form).serialize();
         const csrfToken = $("meta[name='_csrf']").attr("content");
@@ -131,5 +158,31 @@
             opacity: 1;
             transform: translateY(0);
         }
+    }
+    .friends-code-section {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .friends-code-section h3 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .generate-code-btn {
+        background-color: #1abc9c;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .generate-code-btn:hover {
+        background-color: #16a085;
     }
 </style>

@@ -19,6 +19,7 @@ public class User {
     private String username;
     private String password;
     private String roles;
+    private String codeAmi;
 
     @ManyToMany(mappedBy = "owners", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
@@ -31,6 +32,15 @@ public class User {
         this.username = username;
         this.password = password;
         this.roles = roles;
+        this.codeAmi = "";
+    }
+
+    public String getCodeAmi() {
+        return codeAmi;
+    }
+
+    public void setCode_ami(String code_ami) {
+        this.codeAmi = code_ami;
     }
 
     public List<Portfolio> getPortfolios() {
