@@ -2,6 +2,7 @@ package com.example.projet_jee.controller;
 
 import com.example.projet_jee.model.User;
 import com.example.projet_jee.repository.UserRepository;
+import com.example.projet_jee.service.PortfolioService;
 import com.example.projet_jee.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class UserController {
     UserService userService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PortfolioService portfolioService;
 
     @GetMapping("/profil")
     public String profil(@RequestParam String username, Model model) {
@@ -32,13 +35,6 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/partager")
-    public ResponseEntity<Void> partager(@RequestParam Long portfolio_id, @RequestParam String friendCode){
-        userService.sharePortfolio( portfolio_id , friendCode);
-        return ResponseEntity.ok().build();
-    }
-
-
     @PutMapping("/genererCode")
     public ResponseEntity<Void> generateFriendsCode(Principal principal) {
         try {
@@ -50,4 +46,12 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PutMapping("/partager")
+    public ResponseEntity<Void> partager(@RequestParam Long portfolio_id, @RequestParam String friendCode) {
+        System.out.println("Requête reçue : portfolio_id=" + portfolio_id + ", friendCode=" + friendCode);
+        userService.shareWithFriend(friendCode, portfolio_id);
+        return ResponseEntity.ok().build();
+    }
+
 }

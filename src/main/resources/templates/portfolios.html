@@ -44,7 +44,10 @@
                 <div><input type="submit" value="modifier"/></div>
             </form>
             <div><label>estPublic:
-                <input type="checkbox" name="estPublic"
+                <input th:if="${portfolio.estPublic}" checked type="checkbox" name="estPublic"
+                       th:onclick="|switchPublic(${portfolio.id})|"/>
+
+                <input th:if="not ${portfolio.estPublic}"  type="checkbox" name="estPublic"
                        th:onclick="|switchPublic(${portfolio.id})|"/>
             </label></div>
             <ul>
@@ -62,6 +65,7 @@
                     <label>Entrez le code de votre ami et partagez ce portfolio :
                         <input type="text" name="friendCode" required/>
                     </label>
+                    <input type="hidden" name="id" th:value="${portfolio.id}"/>
                 </div>
                 <div>
                     <input type="submit" value="Partager"/>
@@ -102,7 +106,7 @@
 
         $.ajax({
             url: '/portfolios/partager',
-            type: 'PUT',
+            type: 'PUT', // Assurez-vous que la méthode est bien POST
             data: formData,
             beforeSend: function(xhr) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -131,6 +135,7 @@
                 console.log("Changement de visibilité effectué avec succès !");
                 const checkbox = $(`li[data-portfolio-id="${portfolioId}"] input[name='estPublic']`);
                 checkbox.prop('checked', !checkbox.prop('checked'));
+                location.reload();
             },
             error: function(xhr, status, error) {
                 console.error("Erreur :", xhr.responseText || error);
@@ -231,6 +236,7 @@
                     <label>Entrez le code de votre ami et partagez ce portfolio :
                         <input type="text" name="friendCode" required/>
                     </label>
+                    <input type="hidden" name="id" th:value="${response.id}"/>
                 </div>
                 <div>
                     <input type="submit" value="Partager"/>

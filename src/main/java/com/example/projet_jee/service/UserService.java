@@ -51,16 +51,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void sharePortfolio(Long id , String codeAmi) {
-        Portfolio portfolio = portfolioRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Le portfolio n'existe pas"));
-        User user = userRepository.findByCodeAmi(codeAmi).orElseThrow(() -> new IllegalArgumentException("Le codeAmi n'existe pas"));
-        user.getPortfolios().add(portfolio);
-        user.setCode_ami("");
-        userRepository.save(user);
-        portfolio.getOwners().add(user);
-        portfolioRepository.save(portfolio);
-    }
-
     public void generateFriendsCode(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("L'utilisateur n'existe pas"));
@@ -71,5 +61,22 @@ public class UserService {
         } else {
             throw new IllegalArgumentException("Le code ami a déjà été généré");
         }
+    }
+
+    public void shareWithFriend(String codeAmi, Long portfolio_id) {
+        Portfolio portfolio = portfolioRepository.findById(portfolio_id)
+                .orElseThrow(() -> new IllegalArgumentException("Le portfolio n'existe pas"));
+
+        User user = userRepository.findByCodeAmi(codeAmi)
+                .orElseThrow(() -> new IllegalArgumentException("Le codeAmi n'existe pas"));
+
+        user.getPortfolios().add(portfolio);
+
+        user.setCode_ami("");
+
+        userRepository.save(user);
+
+        portfolio.getOwners().add(user);
+        portfolioRepository.save(portfolio);
     }
 }

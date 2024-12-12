@@ -35,8 +35,8 @@ public class ProjetJeeApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		users.save(new User("user", passwordEncoder.encode("password"), "ROLE_USER"));
-		users.save(new User("admin", passwordEncoder.encode("password"), "ROLE_ADMIN"));
+		users.save(new User("user", passwordEncoder.encode("user1f64"), "ROLE_USER"));
+		users.save(new User("admin", passwordEncoder.encode("hohzewP4"), "ROLE_ADMIN"));
 		User user1 = new User("remy", passwordEncoder.encode("remy"), "ROLE_USER");
 		User user2 = new User("Antoine", passwordEncoder.encode("321"), "ROLE_USER");
 		users.save(user1);

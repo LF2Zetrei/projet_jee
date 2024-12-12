@@ -23,10 +23,18 @@ public class HomeController {
     @Autowired
     PortfolioRepository portfolioRepository;
 
+    /*
+     * Affiche la page d'accueil avec une liste de portfolios publics.
+     * Retourne La vue "home" contenant les portfolios publics.
+     */
+
     @GetMapping("/")
     public String home(ModelMap model) {
+        // Récupère tous les portfolios
         List<Portfolio> portfolios = portfolioRepository.findAll();
         List<Portfolio> publicPortfolios = new ArrayList<>();
+
+        // Filtre les portfolios pour ne conserver que ceux qui sont publics
         for( Portfolio portfolio : portfolios ){
             if(portfolio.isEstPublic()){
                 publicPortfolios.add(portfolio);
@@ -36,6 +44,12 @@ public class HomeController {
         return "home";
     }
 
+    /*
+     * Affiche le style public d'un portfolio spécifique.
+     * Paramètre id L'identifiant du portfolio à visualiser.
+     * Retourne La vue "visualiseur" pour afficher les détails du portfolio.
+     */
+
     @GetMapping("/visualiser")
     public String visualiser(@RequestParam Long id, Model model) {
         Portfolio portfolio = portfolioRepository.findById(id)
@@ -44,15 +58,30 @@ public class HomeController {
         return "visualiseur";
     }
 
+    /*
+     * Affiche la page utilisateur.
+     * Retourne La vue "user".
+     */
+
     @GetMapping("/user")
     public String user() {
         return "user";
     }
 
+    /*
+     * Affiche la page administrateur.
+     * Retourne La vue "admin".
+     */
+
     @GetMapping("/admin")
     public String admin() {
         return "admin";
     }
+
+    /*
+     * Affiche la page de connexion.
+     * Retourne La vue "login".
+     */
 
     @GetMapping("/login")
     public String login() {
