@@ -46,4 +46,3 @@
 - repo github incluant les commit et le read me de bonne qualité
 - Oui pour Lucas Fernandes(LF2Zetrei)...
 
-ey

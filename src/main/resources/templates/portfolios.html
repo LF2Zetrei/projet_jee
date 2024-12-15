@@ -105,7 +105,7 @@
         const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
         $.ajax({
-            url: '/portfolios/partager',
+            url: '/user/partager',
             type: 'PUT', // Assurez-vous que la méthode est bien POST
             data: formData,
             beforeSend: function(xhr) {
